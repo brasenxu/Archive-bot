@@ -22,6 +22,15 @@ async def ping(ctx):
 
 
 @bot.command()
+async def messages(ctx):
+    counter = 0
+    async for message in ctx.channel.history(limit=50):
+        if message.author == bot.user:
+            counter += 1
+    await ctx.send(counter)
+
+
+@bot.command()
 async def repeat(ctx, str):
     await ctx.send(str)
 
