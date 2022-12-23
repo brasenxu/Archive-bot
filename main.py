@@ -1,5 +1,5 @@
 # Ponytails >>>
-
+import pandas as pd
 import discord
 import hidden
 from discord.ext import commands
@@ -31,7 +31,25 @@ async def messages(ctx):
 
 
 @bot.command()
-async def repeat(ctx, str):
-    await ctx.send(str)
+async def archive(ctx):
+
+    messages_data = pd.DataFrame(columns=['content', 'author', 'time'])
+
+    async for message in ctx.channel.history(limit=20, oldest_first=True):
+        data = pd.DataFrame({'content': message.content,
+                             'author': message.author.name,
+                             'time': str(message.created_at)[:16]},
+                            index=[0])
+        messages_data = pd.concat([messages_data, data], ignore_index=True)
+
+    file = "messages_data.csv"
+    messages_data.to_csv(file)
+
+    await ctx.send("Finished archiving!")
+
+
+@bot.command()
+async def repeat(ctx, string):
+    await ctx.send(string)
 
 bot.run(hidden.key)
