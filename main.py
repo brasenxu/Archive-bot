@@ -33,10 +33,17 @@ async def messages(ctx):
 @bot.command()
 async def archive(ctx):
 
-    messages_data = pd.DataFrame(columns=['content', 'author', 'time'])
+    messages_data = pd.DataFrame(columns=['content', 'attachment', 'author', 'time'])
 
     async for message in ctx.channel.history(limit=1000, oldest_first=True):
+
+        try:
+            message_attach = message.attachments[0].url
+        except IndexError:
+            message_attach = ""
+
         data = pd.DataFrame({'content': message.content,
+                             'attachment': message_attach,
                              'author': message.author.name,
                              'time': str(message.created_at)[:16]},
                             index=[0])
