@@ -35,7 +35,7 @@ async def archive(ctx):
 
     messages_data = pd.DataFrame(columns=['content', 'author', 'time'])
 
-    async for message in ctx.channel.history(limit=20, oldest_first=True):
+    async for message in ctx.channel.history(limit=1000, oldest_first=True):
         data = pd.DataFrame({'content': message.content,
                              'author': message.author.name,
                              'time': str(message.created_at)[:16]},
@@ -45,7 +45,7 @@ async def archive(ctx):
     file = "messages_data.csv"
     messages_data.to_csv(file)
 
-    await ctx.send("Finished archiving!")
+    await ctx.send("Here is your archive!", file=discord.File(file))
 
 
 @bot.command()
